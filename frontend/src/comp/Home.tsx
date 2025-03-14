@@ -71,12 +71,12 @@ export function Home() {
                 </thead>
                 <tbody>
                     {concerts.map((concert) => (
-                        <tr key={concert.id} id={concert.id.toString()}>
+                        <tr key={concert.id} id={concert.id.toString()} style={{ backgroundColor: concert.canceled ? 'red' : 'transparent' }}>
                             <td>{concert.id}</td>
                             <td>{concert.artist}</td>
                             <td>{concert.startTime}</td>
                             <td>{concert.duration}</td>
-                            <td><button id={"button" + concert.id.toString()} onClick={() => { handleCancel(concert.id) }}>Elmarad</button></td>
+                            <td><button id={"button" + concert.id.toString()} onClick={() => { handleCancel(concert.id) }} disabled={concert.canceled}>Elmarad</button></td>
                         </tr>
                     ))}
                 </tbody>

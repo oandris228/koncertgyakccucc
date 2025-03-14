@@ -31,10 +31,26 @@ export function Home() {
         getConcerts();
     }, [concerts])
 
-    function handleCancel(id: number): any {
+    const handleCancel = async (id: number): Promise<any> => {
         const element = document.getElementById(id.toString());
         if (element) {
-            element.style.backgroundColor = "red";
+            try {
+                const response = await fetch(`http://localhost:3000/concerts/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ canceled: true }),
+                });
+                if (response.ok) {
+                    element.style.backgroundColor = "red";
+                    (document.getElementById("button" + id.toString()) as HTMLButtonElement).disabled = true;
+                } else {
+                    window.alert("Error submitting form");
+                }
+            } catch (error: any) {
+                console.error("Error submitting form:", error);
+                window.alert("Error submitting form:" + error.message);
+            }
+
         } else {
             window.alert(`Element with id ${id} not found`);
         }
@@ -60,7 +76,7 @@ export function Home() {
                             <td>{concert.artist}</td>
                             <td>{concert.startTime}</td>
                             <td>{concert.duration}</td>
-                            <td><button onClick={() => {handleCancel(concert.id)}}>Elmarad</button></td>
+                            <td><button id={"button" + concert.id.toString()} onClick={() => { handleCancel(concert.id) }}>Elmarad</button></td>
                         </tr>
                     ))}
                 </tbody>

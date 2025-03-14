@@ -28,12 +28,16 @@ export function Add() {
     const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            await fetch('http://localhost:3000/concerts', {
+            const response = await fetch('http://localhost:3000/concerts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
-            navigate('/');
+            if (response.ok) {
+                navigate('/');
+            } else {
+                window.alert("Error submitting form");
+            }
         } catch (error: any) {
             console.error("Error submitting form:", error);
             window.alert("Error submitting form:" + error.message);

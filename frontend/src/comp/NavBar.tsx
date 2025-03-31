@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import '../navbar.css'
 
 export function NavBar() {
@@ -5,8 +6,8 @@ export function NavBar() {
         <nav className="navbar navbar-inverse">
             <div className="container-fluid">
                 <ul className="nav navbar-nav">
-                    <li className="active"><a href="/">Home</a></li>
-                    <li><a href="/add">Új koncert</a></li>
+                    <li className="active"><NavLink to="/">Home</NavLink></li>
+                    <li><NavLink to="/add">Új koncert</NavLink></li>
                 </ul>
             </div>
         </nav>

@@ -11,29 +11,29 @@ export function Home() {
         canceled: boolean;
     }
 
-    useEffect(() => {
-        async function getConcerts() {
-            try {
-                const response = await fetch("http://localhost:3000/concerts");
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
-
-                const json = await response.json();
-                setConcerts(json);
-            } catch (error: any) {
-                console.error(error.message);
-                document.getElementById("home")!.hidden = true;
-                document.getElementById("error")!.hidden = false;
-                document.getElementById("error")!.innerHTML = error.message;
+    async function getConcerts() {
+        try {
+            const response = await fetch("http://localhost:3000/concerts");
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
             }
+
+            const json = await response.json();
+            setConcerts(json);
+        } catch (error: any) {
+            console.error(error.message);
+            document.getElementById("home")!.hidden = true;
+            document.getElementById("error")!.hidden = false;
+            document.getElementById("error")!.innerHTML = error.message;
         }
+    }
+
+    useEffect(() => {
+
         getConcerts();
-    }, [concerts])
+    }, [])
 
     const handleCancel = async (id: number): Promise<any> => {
-        const element = document.getElementById(id.toString());
-        if (element) {
             try {
                 const response = await fetch(`http://localhost:3000/concerts/${id}`, {
                     method: 'PATCH',
@@ -41,8 +41,17 @@ export function Home() {
                     body: JSON.stringify({ canceled: true }),
                 });
                 if (response.ok) {
-                    element.style.backgroundColor = "red";
-                    (document.getElementById("button" + id.toString()) as HTMLButtonElement).disabled = true;
+                    await getConcerts();
+                    /*const newConcerts = Array.from(concerts);
+                    const concertIdx = concerts.findIndex(c => c.id == id);
+                    const concert = { ...concerts[concertIdx] }
+                    concert.canceled = true;
+        
+                    newConcerts[concertIdx] = concert;
+
+                    setConcerts(newConcerts);
+                    */
+
                 } else {
                     window.alert("Error submitting form");
                 }
@@ -51,9 +60,6 @@ export function Home() {
                 window.alert("Error submitting form:" + error.message);
             }
 
-        } else {
-            window.alert(`Element with id ${id} not found`);
-        }
     }
 
     return <>
